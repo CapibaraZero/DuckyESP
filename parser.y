@@ -1,20 +1,18 @@
 %{
     #include <stdio.h>
-    
-    int yylex();
-    int yyerror();
-
-    int yylineno;
+    #include <string>
+    extern "C" int yylex();
+    int yyerror(char *s);
 
     void header();
     void print_default_delay();
-    void print_string();
+    void print_string(char *s);
     void footer();
 
     int d = 0;
 %}
 
-%token alt altgr backspace default_delay delay menu pause_key capslock ctrl delete down end enter esc function gui home insert left letter new_line numlock pagedown pageup printscreen rem repeat right scrolllock separator shift space string tab up
+%token alt altgr backspace default_delay delay_key menu pause_key capslock ctrl delete_key down end enter esc function gui home insert left letter new_line numlock pagedown pageup printscreen rem repeat right scrolllock separator shift space string tab up
 
 // required to get text
 %union {
@@ -32,14 +30,14 @@ bloc: line repeat new_line
     | line
 
 line: keys {printf("  Keyboard.releaseAll();\n");print_default_delay();} new_line
-    | delay {printf("  delay(%d);\n", yylval.integer*10);} new_line
+    | delay_key {printf("  delay(%d);\n", yylval.integer*10);} new_line
     | default_delay {d = yylval.integer*10;} new_line
     | rem {printf("  // %s\n", yylval.text);} new_line
     | string {print_string(yylval.text);print_default_delay();} new_line
     | new_line {printf("\n");}
 
 keys: key separator keys
-    | key
+    | key 
 
 key: alt {printf("  Keyboard.press(KEY_LEFT_ALT);\n");}
    | altgr {printf("  Keyboard.press(KEY_RIGHT_ALT);\n");}
@@ -48,7 +46,7 @@ key: alt {printf("  Keyboard.press(KEY_LEFT_ALT);\n");}
    | pause_key {printf("  Keyboard.press(0x48+0x88);\n");}
    | capslock {printf("  Keyboard.press(KEY_CAPS_LOCK);\n");}
    | ctrl {printf("  Keyboard.press(KEY_LEFT_CTRL);\n");}
-   | delete {printf("  Keyboard.press(KEY_DELETE);\n");}
+   | delete_key {printf("  Keyboard.press(KEY_DELETE);\n");}
    | down {printf("  Keyboard.press(KEY_DOWN_ARROW);\n");}
    | end {printf("  Keyboard.press(KEY_END);\n");}
    | enter {printf("  Keyboard.press(KEY_RETURN);\n");}
@@ -72,7 +70,7 @@ key: alt {printf("  Keyboard.press(KEY_LEFT_ALT);\n");}
 %%
 
 int yyerror(char *s) {
-    printf("\033[31merror:\033[0m %s \033[32m(l.%d)\033[0m\n",s,yylineno);
+    printf("\033[31merror:\033[0m %s \033[32m(l.%d)\033[0m\n",s);
     return 0;
 }
 

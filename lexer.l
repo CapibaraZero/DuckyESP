@@ -1,12 +1,13 @@
 %{
     #include <string.h>
-    #include "parser.h"
+    #include "parser.hpp"
 %}
 
 %option noyywrap
 %option yylineno
 
 %%
+
 ALT {
     return alt;
 }
@@ -47,11 +48,11 @@ DEFAULTDELAY\ [0-9]+ {
 
 DELAY\ [0-9]+ {
     yylval.integer = atoi(&yytext[6]);
-    return delay;
+    return delay_key;
 }
 
 DELETE {
-    return delete;
+    return delete_key;
 }
 
 DOWN|DOWNARROW {
@@ -108,7 +109,7 @@ PRINTSCREEN {
 }
 
 REM\ [[:graph:]|[:blank:]]* {
-    yylval.text = malloc(sizeof(char)*(strlen(yytext)+1));
+    yylval.text = (char *)malloc(sizeof(char)*(strlen(yytext)+1));
     strcpy(yylval.text, &yytext[4]);
     return rem;
 }
@@ -135,7 +136,7 @@ SPACE {
 }
 
 STRING\ [[:graph:]|[:blank:]]+ {
-    yylval.text = malloc(sizeof(char)*(strlen(yytext)+1));
+    yylval.text = (char *)malloc(sizeof(char)*(strlen(yytext)+1));
     strcpy(yylval.text, &yytext[7]);
     return string;
 }
@@ -157,7 +158,7 @@ UP|UPARROW {
 }
 
 [[:alpha:]] {
-    yylval.text = malloc(sizeof(char)*(strlen(yytext)+1));
+    yylval.text = (char *)malloc(sizeof(char)*(strlen(yytext)+1));
     strcpy(yylval.text, yytext);
     return letter;
 }
