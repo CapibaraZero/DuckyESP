@@ -1,0 +1,28 @@
+{
+    "name": "DuckyESP",
+    "keywords": "sd, esp32, yacc, bison, rubberducky, ducky, usb, otg, hid",
+    "description": "Interpreter for DuckyScript 3.0 written with Flex and Bison. Works with ESP32-S2/S3",
+    "authors": [
+	{
+	    "name": "Andreock",
+	    "maintainer": true
+	},
+	{
+	    "name": "msommacal",
+	    "maintainer": false 
+	}
+		
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/CapibaraZero/DuckyESP.git"
+    },
+    "version": "1.0",
+    "frameworks": "arduino",
+    "dependencies": {
+	"HID": "https://github.com/CapibaraZero/HID.git"	
+    },
+    "build": {
+	"extraScript": "generate_code.py"
+    }
+}
