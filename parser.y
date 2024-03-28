@@ -35,7 +35,11 @@
     #define KEY_NUMLOCK 0x53+0x88
     #define KEY_PRINTSCREEN 0x46+0x88
     #define KEY_SCROLLLOCK 0x47+0x88
-   
+	#ifdef ARDUINO_NANO_ESP32
+	#define SERIAL_DEVICE Serial
+	#else
+	#define SERIAL_DEVICE Serial0
+	#endif
     /* Mock values */
     #define LED_G_PIN 2
     #define LED_R_PIN 3
@@ -310,8 +314,8 @@ key: alt {hid.press(KEY_LEFT_ALT);}
 	       digitalWrite(LED_R_PIN, HIGH);
     }
 
-expr: num_var {Serial0.printf("NOT IMPLEMENTED: int %s;", yylval.text);}
-    | str_var { Serial0.printf("NOT IMPLEMENTED: std::string %s\";", yylval.text);}
+expr: num_var {SERIAL_DEVICE.printf("NOT IMPLEMENTED: int %s;", yylval.text);}
+    | str_var { SERIAL_DEVICE.printf("NOT IMPLEMENTED: std::string %s\";", yylval.text);}
     | str_define {
 	std::stringstream define = std::stringstream(yylval.text);
 	std::string temp_str;
@@ -338,15 +342,15 @@ expr: num_var {Serial0.printf("NOT IMPLEMENTED: int %s;", yylval.text);}
 	}
 	num_constants[define_name] = atoi(temp_str.c_str());
     }
-    | math_operator {Serial0.printf("NOT IMPLEMENTED MATH OPERATOR %s;", yylval.text);}
-    | if_statement {Serial0.printf("NOT IMPLEMENTED: if%s{\n", yylval.text);}
-    | end_if {Serial0.printf("NOT IMPLEMENTED }\n");} 
+    | math_operator {SERIAL_DEVICE.printf("NOT IMPLEMENTED MATH OPERATOR %s;", yylval.text);}
+    | if_statement {SERIAL_DEVICE.printf("NOT IMPLEMENTED: if%s{\n", yylval.text);}
+    | end_if {SERIAL_DEVICE.printf("NOT IMPLEMENTED }\n");} 
 
 modes: attackmode {
 	if(strcmp(yylval.text, "STORAGE") == 0)
-	    Serial0.println("NOT IMPLEMENTED: STORAGE");
+	    SERIAL_DEVICE.println("NOT IMPLEMENTED: STORAGE");
 	else if(strcmp(yylval.text, "HID") == 0)
-	    Serial0.println("NOT IMPLEMENTED: HID");
+	    SERIAL_DEVICE.println("NOT IMPLEMENTED: HID");
 	else
 	   yyerror("Invalid ATTACKMODE"); 
      }
@@ -371,18 +375,18 @@ combos: ctrl_alt {
 	}
 
 /* TODO: Make implementation of this */
-btn: wait_for_button_press {Serial0.println("NOT IMPLEMENTED: Wait for button press.\n");}
+btn: wait_for_button_press {SERIAL_DEVICE.println("NOT IMPLEMENTED: Wait for button press.\n");}
    | enable_button {
 	button_enabled = true;
-	Serial0.println("NOT IMPLEMENTED: Enable button.");
+	SERIAL_DEVICE.println("NOT IMPLEMENTED: Enable button.");
    }
    | disable_button {
 	button_enabled = false;
-	Serial0.println("NOT IMPLEMENTED Disable button.");
+	SERIAL_DEVICE.println("NOT IMPLEMENTED Disable button.");
     }
 
 payload_control: restart_payload {
-		    Serial0.println("NOT IMPLEMENTED: Restart payload");
+		    SERIAL_DEVICE.println("NOT IMPLEMENTED: Restart payload");
 		    rewind(yyin);	// Reset FILE pointer to position 0
 		}
 	       | stop_payload {
@@ -419,12 +423,12 @@ randomization: random_lowercase_letter_keyword {
 		hid.print_char(random_special());
 	    }
 	    | random_char_keyword {
-		Serial0.println("NOT IMPLEMENTED: Keyboard.print(random_char());\n");
+		SERIAL_DEVICE.println("NOT IMPLEMENTED: Keyboard.print(random_char());\n");
 	    }
 %%
 
 int yyerror(char *s) {
-    Serial0.printf("\033[31merror:\033[0m %s \033[0m",s);
+    SERIAL_DEVICE.printf("\033[31merror:\033[0m %s \033[0m",s);
     raise(SIGSEGV);
     return 0;
 }
