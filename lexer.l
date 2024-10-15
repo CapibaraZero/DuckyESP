@@ -23,34 +23,34 @@
     extern "C" int yylex();
 
     bool is_number(const char *s) {
-	char* p;
-	long converted = strtol(s, &p, 10);
-	if (*p) {
-	    return false;
-	}
-	else {
-	    return true;
-	}
+        char* p;
+        long converted = strtol(s, &p, 10);
+        if (*p) {
+            return false;
+        }
+        else {
+            return true;
+        }
     }
 
     int replacechar(char *str, char orig, char rep) {
-	char *ix = str;
-	int n = 0;
-        while((ix = strchr(ix, orig)) != NULL) {
-	    *ix++ = rep;
-	    n++;
-        }
-	return n;
+        char *ix = str;
+        int n = 0;
+            while((ix = strchr(ix, orig)) != NULL) {
+            *ix++ = rep;
+            n++;
+            }
+        return n;
     }
-void replace_first(
-    std::string& s,
-    std::string const& toReplace,
-    std::string const& replaceWith
-) {
-    std::size_t pos = s.find(toReplace);
-    if (pos == std::string::npos) return;
-    s.replace(pos, toReplace.length(), replaceWith);
-}
+    void replace_first(
+        std::string& s,
+        std::string const& toReplace,
+        std::string const& replaceWith
+    ) {
+        std::size_t pos = s.find(toReplace);
+        if (pos == std::string::npos) return;
+        s.replace(pos, toReplace.length(), replaceWith);
+    }
 %}
 
 %option noyywrap
