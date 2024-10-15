@@ -17,12 +17,13 @@
         "type": "git",
         "url": "https://github.com/CapibaraZero/DuckyESP.git"
     },
-    "version": "1.0",
+    "version": "1.1.0",
     "frameworks": "arduino",
     "dependencies": {
-	"HID": "https://github.com/CapibaraZero/HID.git"	
+        "HID": "https://github.com/CapibaraZero/HID.git",
+        "SDBridge32": "https://github.com/CapibaraZero/SDBridge32.git"
     },
     "build": {
-	"extraScript": "generate_code.py"
+	    "extraScript": "generate_code.py"
     }
 }

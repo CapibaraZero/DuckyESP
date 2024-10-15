@@ -24,6 +24,7 @@
     #include <stdlib.h>
     #include <map>
     #include "usb_hid/USBHid.hpp" 
+    #include "ESPMSC.hpp"
     #include "Arduino.h"
 
     std::map<std::string, int> num_constants;
@@ -51,7 +52,8 @@
     void print_default_delay();
     
     USBHid hid = USBHid();
-
+    ESPMSC msc = ESPMSC();
+    
     int d = 0;
     int rand_min = 0;
     int rand_max = 65535;
@@ -347,13 +349,17 @@ expr: num_var {SERIAL_DEVICE.printf("NOT IMPLEMENTED: int %s;", yylval.text);}
     | end_if {SERIAL_DEVICE.printf("NOT IMPLEMENTED }\n");} 
 
 modes: attackmode {
-	if(strcmp(yylval.text, "STORAGE") == 0)
-	    SERIAL_DEVICE.println("NOT IMPLEMENTED: STORAGE");
-	else if(strcmp(yylval.text, "HID") == 0)
-	    SERIAL_DEVICE.println("NOT IMPLEMENTED: HID");
+	if(strcmp(yylval.text, "STORAGE") == 0){
+		hid.end();
+		msc.begin("CapibaraZero", "DuckyESP", "1.1.0");
+	}
+	else if(strcmp(yylval.text, "HID") == 0) {
+		msc.end();
+		hid.begin();
+	}
 	else
 	   yyerror("Invalid ATTACKMODE"); 
-     }
+    }
 
 combos: ctrl_alt {
 	    hid.press(KEY_LEFT_CTRL);
