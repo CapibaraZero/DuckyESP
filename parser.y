@@ -24,7 +24,7 @@
     #include <stdlib.h>
     #include <map>
     #include "usb_hid/USBHid.hpp" 
-    #include "ESPMSC.hpp"
+    #include "SDBridge32.hpp"
     #include "Arduino.h"
 
     std::map<std::string, int> num_constants;
@@ -52,7 +52,7 @@
     void print_default_delay();
     
     USBHid hid = USBHid();
-    ESPMSC msc = ESPMSC();
+    SDBridge32 msc = SDBridge32();
     
     int d = 0;
     int rand_min = 0;
