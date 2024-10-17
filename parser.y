@@ -59,8 +59,6 @@
     int rand_max = 65535;
     bool button_enabled = false;
     bool button_push_received = false;
-    bool jitter_enabled = false;
-    int jitter_max = 20000;	// 20 seconds in milliseconds
 
     char random_lowercase_letter() {
 	return rand() % (122 + 1 - 97) + 97;
@@ -403,14 +401,14 @@ payload_control: restart_payload {
 		}
 
 jitter: jitter_enabled_key { 
-	if(strstr(yylval.text, "TRUE")!= NULL){
-	    jitter_enabled = true;
-	}else {
-	    jitter_enabled = false;
-	}
+		if(strstr(yylval.text, "TRUE")!= NULL){
+			hid.set_jitter_status(true);
+		}else {
+			hid.set_jitter_status(false);
+		}
       }
       | jitter_max_key { 
-	    jitter_max = atoi(yylval.text);
+	   hid.set_jitter_level(atoi(yylval.text));
       }
 
 randomization: random_lowercase_letter_keyword {
