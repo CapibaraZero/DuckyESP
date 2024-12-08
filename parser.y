@@ -24,8 +24,8 @@
     #include <stdlib.h>
     #include <map>
     #include "usb_hid/USBHid.hpp" 
-    #include "SDBridge32.hpp"
     #include "Arduino.h"
+    #include "SDBridge32.hpp"
 
     std::map<std::string, int> num_constants;
     std::map<std::string, std::string> string_constants;
@@ -39,7 +39,8 @@
 	#ifdef ARDUINO_NANO_ESP32
 	#define SERIAL_DEVICE Serial
 	#else
-	#define SERIAL_DEVICE Serial0
+	//#define SERIAL_DEVICE Serial0
+	#define SERIAL_DEVICE Serial
 	#endif
     /* Mock values */
     #define LED_G_PIN 2
@@ -50,10 +51,12 @@
     extern FILE *yyin;
 
     void print_default_delay();
-    
     USBHid hid = USBHid();
+	bool initialized = false;
+#ifndef ARDUINO_ARCH_RP2040
     SDBridge32 msc = SDBridge32();
-    
+#endif
+
     int d = 0;
     int rand_min = 0;
     int rand_max = 65535;
@@ -198,7 +201,7 @@
     }
 %}
 
-%token alt altgr backspace default_delay delay_key menu pause_key capslock ctrl delete_key down end enter esc function gui home insert led_red led_green left letter  numlock pagedown pageup printscreen repeat right scrolllock separator shift space string multiline_string multiline_stringln stringln tab up if_statement release hold
+%token alt altgr backspace default_delay delay_key menu pause_key capslock ctrl delete_key down end enter esc function gui home insert layout led_red led_green left letter  numlock pagedown pageup printscreen repeat right scrolllock separator shift space string multiline_string multiline_stringln stringln tab up if_statement release hold
 %token<s> num_var str_var num_define str_define math_operator end_if
 %type<i> expr
 // Attack mode
@@ -244,9 +247,12 @@ line: keys {
     | delay_key {delay(yylval.integer);} 
     | default_delay {d = yylval.integer;} 
     | string {
-	hid.print_string(yylval.text);
-	print_default_delay();
-    } 
+		hid.print_string(yylval.text);
+		print_default_delay();
+    }
+	| layout {
+		hid.begin(yylval.text);
+	}
     | multiline_string { 
 	initial_trim(yylval.text);
 	hid.print_string(yylval.text); 
@@ -349,10 +355,14 @@ expr: num_var {SERIAL_DEVICE.printf("NOT IMPLEMENTED: int %s;", yylval.text);}
 modes: attackmode {
 	if(strcmp(yylval.text, "STORAGE") == 0){
 		hid.end();
+		#ifndef ARDUINO_ARCH_RP2040
 		msc.begin("CapibaraZero", "DuckyESP", "1.1.0");
+		#endif
 	}
 	else if(strcmp(yylval.text, "HID") == 0) {
+		#ifndef ARDUINO_ARCH_RP2040
 		msc.end();
+		#endif
 		hid.begin();
 	}
 	else

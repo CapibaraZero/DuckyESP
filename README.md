@@ -23,7 +23,7 @@ Supported keywords, as per [Duckyscript docs](https://docs.hak5.org/hak5-usb-rub
 |     DISABLE_BUTTON     | :white_check_mark: |
 |      ENABLE_BUTTON     | :white_check_mark: |
 | LED_G/LED_R/LED_OFF    | :white_check_mark: |
-|        Attackmode      |      :warning:     |
+|        Attackmode      | :white_check_mark: |
 |          DEFINE        | :white_check_mark: |
 |           VAR          | :white_check_mark: |
 |        Operators       |         :x:        |
@@ -34,10 +34,13 @@ Supported keywords, as per [Duckyscript docs](https://docs.hak5.org/hak5-usb-rub
 |         Jitter         | :white_check_mark: |
 |   Wait for lock keys   |      :warning:     |
 
-- Attackmode can be parsed but implementation is not available yet. 
 - Wait for lock keys can be parsed but implementation is not available yet.
 - Wait for button press can be parsed but implementation is not available yet.
 - The other keywords(also the one that there aren't in the table) will be available in future
+
+## Layout
+
+If you want to use a different layout from en_US you can put LAYOUT command at the begin of the script. More info [here]()
 
 ## Integrate with a project
 

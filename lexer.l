@@ -112,6 +112,12 @@ STRING {
     BEGIN(STRING_CONTENT);
 }
 
+LAYOUT\ [[:graph:]|[:blank:]]+ {
+    yylval.text = (char *)malloc(sizeof(char)*(strlen(yytext)+1));
+    strcpy(yylval.text, &yytext[7]);
+    return layout;
+}
+
 STRING\ [[:graph:]|[:blank:]]+ {
     yylval.text = (char *)malloc(sizeof(char)*(strlen(yytext)+1));
     strcpy(yylval.text, &yytext[7]);
