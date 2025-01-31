@@ -14,5 +14,10 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import os
+Import("env")
 
-os.system("make clean && make")
+try:
+    if env.GetProjectOption("board_has_otg") == "true":
+        os.system("make clean && make")
+except:
+    print("Missing board_has_otg flag")
